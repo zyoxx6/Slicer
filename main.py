@@ -119,15 +119,21 @@ async def phishcheck(interaction: discord.Interaction, url: str):
 @bot.tree.command(name="qrcode", description="Generate QR code")
 @app_commands.describe(url="The URL to check", fg="Foreground color", bg="Background color")
 async def qrcode(interaction: discord.Interaction, url: str, fg: str, bg: str):
-    qr = qrcode.QRCode()
-    qr.add_data(url)
-    qr.make(fit=True)
-    img = qr.make_image(fill_color=fg, back_color=bg)
-    buffer = BytesIO()
-    img.save(buffer, format='PNG')
-    buffer.seek(0)
-    file = discord.File(fp=buffer, filename="qrcode.png")
-    await interaction.response.send_message(file=file)
+    await interaction.response.defer(ephemeral=True)
+
+    try:
+
+        qr = qrcode.QRCode()
+        qr.add_data(url)
+        qr.make(fit=True)
+        img = qr.make_image(fill_color=fg, back_color=bg)
+        buffer = BytesIO()
+        img.save(buffer, format='PNG')
+        buffer.seek(0)
+        file = discord.File(fp=buffer, filename="qrcode.png")
+        await interaction.followup.send(file=file)
+    except Exception as e:
+        await interaction.followup.send(f"Error **{e}**", ephemeral=True)
 
 
 
