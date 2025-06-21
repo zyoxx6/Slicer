@@ -94,6 +94,7 @@ async def phishcheck(interaction: discord.Interaction, url: str):
     with Virustotal(VIRUSTOTAL_KEY) as vtotal:
         try:
             resp = vtotal.request("urls", data={"url": url}, method="POST")
+            await asyncio.sleep(10)
             url_id = urlsafe_b64encode(url.encode()).decode().strip("=")
 
             report = vtotal.request(f"urls/{url_id}")
