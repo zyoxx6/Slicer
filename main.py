@@ -35,10 +35,9 @@ async def on_ready():
 @bot.tree.command(name="poll", description="Send a poll.")
 async def poll(interaction: discord.Interaction, question: str):
     await interaction.response.defer(ephemeral=True)
-    msg = await interaction.channel.send(f"*Poll* {question}")
+    msg = await interaction.channel.send(f"**{interaction.user.name()}** asks: {question}")
     await msg.add_reaction("👍")
     await msg.add_reaction("👎")
-    await interaction.followup.send(f"Poll sent: {question}", ephemeral=True)
 
 @bot.tree.command(name="assign", description="Assign me a role")
 @app_commands.describe(role="The role to assign")
@@ -75,6 +74,7 @@ async def clear(interaction: discord.Interaction, message: int):
 @bot.tree.command(name="number", description="Find numbers location carrier timezone")
 @app_commands.describe(number="The number to find Enter number without plus")
 async def number(interaction: discord.Interaction, number: int):
+    await interaction.response.defer(ephemeral=True)
     numb = "+" + str(number)
 
     parsed = phonenumbers.parse(numb)
@@ -82,9 +82,13 @@ async def number(interaction: discord.Interaction, number: int):
     _carrier = carrier.name_for_number(parsed, "en")
     _timezone = timezone.time_zones_for_number(parsed)
 
-    await interaction.response.send_message(f'The location of that number is **__{_location}__**')
-    await interaction.followup.send(f'The timezone of that number is **__{_timezone}__**')
-    await interaction.followup.send(f'The carrier of that number is **__{_carrier}__**')
+    try:
+        await interaction.followup.send(f'The location of that number is **__{_location}__**')
+        await interaction.followup.send(f'The timezone of that number is **__{_timezone}__**')
+        await interaction.followup.send(f'The carrier of that number is **__{_carrier}__**')
+    except Exception as e:
+        await interaction.followup.send(f'An error occurred: __{e}__', ephemeral=True)
+
 
 
 
