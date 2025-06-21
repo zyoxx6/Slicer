@@ -118,7 +118,7 @@ async def phishcheck(interaction: discord.Interaction, url: str):
 
 @bot.tree.command(name="qrcode", description="Generate QR code")
 @app_commands.describe(url="The URL to check", fg="Foreground color", bg="Background color")
-async def qrcode(interaction: discord.Interaction, url: str, fg: str, bg: str):
+async def qrcode(interaction: discord.Interaction, url: str, fg: str = "white", bg: str = "black"):
     await interaction.response.defer(ephemeral=True)
 
     try:
