@@ -14,6 +14,7 @@ from base64 import  urlsafe_b64encode
 from discord import app_commands
 from discord.ext import commands
 from dotenv import load_dotenv
+import webserver
 
 load_dotenv()
 
@@ -113,5 +114,5 @@ async def phishcheck(interaction: discord.Interaction, url: str):
 
 
 
-
+webserver.keep_alive()
 bot.run(DISCORD_TOKEN)
